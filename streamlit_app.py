@@ -5,6 +5,7 @@ import fitz
 
 from dotenv import load_dotenv
 from google import genai
+from streamlit.errors import StreamlitSecretNotFoundError
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -18,9 +19,17 @@ st.title("📚 AI Document Assistant")
 st.write("Ask questions about your PDF using Gemini AI and RAG.")
 
 api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GENAI_API_KEY")
+if not api_key:
+    try:
+        api_key = st.secrets.get("GEMINI_API_KEY") or st.secrets.get("GENAI_API_KEY")
+    except StreamlitSecretNotFoundError:
+        api_key = None
 
 if not api_key:
-    st.error("Gemini API key not found. Check your .env file.")
+    st.error(
+        "Gemini API key not found. Set GEMINI_API_KEY in your .env file "
+        "or in your Streamlit app secrets."
+    )
     st.stop()
 
 client = genai.Client(
