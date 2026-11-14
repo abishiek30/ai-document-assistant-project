@@ -108,13 +108,13 @@ Answer:
 """
 
             try:
-                response = client.models.generate_content(
-                    model="gemini-2.5-flash",
-                    contents=prompt
+                response = client.interactions.create(
+                    model="gemini-3.8-flash",
+                    input=prompt
                 )
 
                 st.subheader("🤖 AI Generated Answer")
-                st.write(response.text)
+                st.write(response.output_text)
 
                 with st.expander("View Retrieved Document Context"):
                     for i, result in enumerate(results):
