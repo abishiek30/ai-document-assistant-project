@@ -23,7 +23,10 @@ if not api_key:
     st.error("Gemini API key not found. Check your .env file.")
     st.stop()
 
-client = genai.Client(api_key=api_key)
+client = genai.Client(
+    api_key=api_key,
+    http_options=genai.types.HttpOptions(timeout=30000),
+)
 
 @st.cache_resource
 def load_embeddings():
